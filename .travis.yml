@@ -1,0 +1,18 @@
+language: python
+
+sudo: false
+
+python:
+  - 2.6
+  - 2.7
+  - 3.4
+  - 3.3
+
+install:
+  - pip install coverage coveralls pytest
+
+script:
+  - coverage run --source=skame -m py.test -v --tb=native
+
+after_success:
+  - coveralls
