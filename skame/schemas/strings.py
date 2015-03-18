@@ -23,6 +23,7 @@ class NotEmptySchema(Schema):
         return data
 
 
+# Based on django validators code
 class EmailSchema(Schema):
     """Validator for checking if a value is an email."""
     message = _("Invalid email format")

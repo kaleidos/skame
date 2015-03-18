@@ -9,5 +9,6 @@ class SchemaError(Exception):
 class SchemaErrors(Exception):
     """Exception used to indicate that the validation of multiple values failed."""
 
-    def __init__(self, errors):
+    def __init__(self, errors, error_codes):
         self.errors = errors
+        self.error_codes = error_codes

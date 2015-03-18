@@ -10,7 +10,7 @@ def clean_data_or_raise(schema: "Schema", data: dict, exc_type: "Exception"=Sche
     try:
         return schema.validate(data)
     except SchemaErrors as e:
-        raise exc_type(e.errors)
+        raise exc_type(e.errors, e.error_codes)
 
 
 def validate(schema: "Schema", data: dict) -> (dict, dict):

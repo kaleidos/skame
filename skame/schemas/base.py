@@ -200,6 +200,7 @@ class Map(Schema):
 
     def _validate(self, data: dict, fields: dict, value_getter: "function") -> dict:
         errors = {}
+        error_codes = {}
         result = {}
 
         for field in fields:
@@ -208,13 +209,15 @@ class Map(Schema):
                 cleaned_value = self.mapping[field].validate(value)
             except KeyError:
                 errors[str(field)] = _("Field `{0}` is required.").format(field)
+                error_codes[str(field)] = "required"
             except SchemaError as e:
                 errors[str(field)] = e.error
+                error_codes[str(field)] = e.error_code
             else:
                 result[str(field)] = cleaned_value
 
-        if errors:
-            raise SchemaErrors(errors)
+        if errors or error_codes:
+            raise SchemaErrors(errors, error_codes)
 
         return result
 
