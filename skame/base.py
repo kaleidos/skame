@@ -113,23 +113,6 @@ class Is(Type):
         return data is self.type
 
 
-class NotEmpty(Schema):
-    """Validator for checking if a value is not empty (boolean false)."""
-    message = _("Empty value")
-
-    def __init__(self, message=None):
-        if message:
-            self.message = message
-
-    def _check(self, data):
-        return bool(data)
-
-    def validate(self, data: object) -> object:
-        if not self._check(data):
-            raise SchemaError(self.message)
-        return data
-
-
 class PredicateBase(Schema):
     """Base class for define predicates."""
 
