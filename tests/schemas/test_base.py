@@ -1,6 +1,6 @@
 import pytest
 
-from skame import base as b
+from skame.schemas import base as b
 from skame.exceptions import SchemaError, SchemaErrors
 from skame.validator import clean_data_or_raise, validate
 

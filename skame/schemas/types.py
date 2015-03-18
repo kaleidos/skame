@@ -1,4 +1,4 @@
-from skame.base import Type, Is
+from skame.schemas.base import Type, Is
 
 
 class IntSchema(Type):

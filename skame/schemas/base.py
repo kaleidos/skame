@@ -5,8 +5,8 @@ from abc import abstractmethod, ABCMeta
 
 from gettext import gettext as _
 
-from .exceptions import SchemaError, SchemaErrors
-from .utils import compose
+from skame.exceptions import SchemaError, SchemaErrors
+from skame.utils import compose
 
 
 class Optional:

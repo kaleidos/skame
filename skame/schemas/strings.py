@@ -2,7 +2,7 @@ import re
 
 from gettext import gettext as _
 
-from skame.base import Schema
+from skame.schemas.base import Schema
 from skame.exceptions import SchemaError
 
 
