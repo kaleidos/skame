@@ -2,7 +2,7 @@ import re
 
 from gettext import gettext as _
 
-from skame.schemas.base import Schema
+from skame.schemas.base import Schema, Predicate
 from skame.exceptions import SchemaError
 
 
@@ -21,6 +21,68 @@ class NotEmptySchema(Schema):
         if not self._check(data):
             raise SchemaError(self.message)
         return data
+
+
+class RegexSchema(Schema):
+    regex = ''
+    message = _('Invalid text.')
+
+    def __init__(self, message=None, regex=None):
+        if regex is not None:
+            self.regex = regex
+        if message is not None:
+            self.message = message
+
+        if isinstance(self.regex, str):
+            self.regex = re.compile(self.regex)
+
+    def _check(self, data):
+        """
+        Validates that the input matches the regular expression
+        """
+        if self.regex.search(data) is None:
+            return False
+        return True
+
+    def validate(self, data: object) -> object:
+        if not self._check(data):
+            raise SchemaError(self.message)
+        return data
+
+
+class URLSchema(RegexSchema):
+    regex = re.compile(
+        r'^(?:[a-z0-9\.\-]*)://'  # scheme is validated separately
+        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}(?<!-)\.?)|'  # domain...
+        r'localhost|'  # localhost...
+        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|'  # ...or ipv4
+        r'\[?[A-F0-9]*:[A-F0-9:]+\]?)'  # ...or ipv6
+        r'(?::\d+)?'  # optional port
+        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+    message = _('Invalid URL.')
+    schemes = ['http', 'https', 'ftp', 'ftps']
+
+    def __init__(self, message=None, schemes=None):
+        super().__init__(message=message)
+        if schemes is not None:
+            self.schemes = schemes
+
+    def _validate_scheme(self, data):
+        scheme = data.split('://')[0].lower()
+
+        if scheme in self.schemes:
+            return True
+
+        return False
+
+    def _check(self, data):
+        if not self._validate_scheme(data):
+            return False
+
+        if not super()._check(data):
+            return False
+
+        return True
 
 
 class EmailSchema(Schema):
@@ -72,3 +134,23 @@ class EmailSchema(Schema):
         if not self._check(data):
             raise SchemaError(self.message)
         return data
+
+
+class MaxLengthSchema(Predicate):
+    message = _('Too long string')
+
+    def __init__(self, max_length, message=None):
+        if message is not None:
+            self.message = message
+
+        self.predicate = lambda data: len(data) <= max_length
+
+
+class MinLengthSchema(Predicate):
+    message = _('Too short string')
+
+    def __init__(self, min_length, message=None):
+        if message is not None:
+            self.message = message
+
+        self.predicate = lambda data: len(data) >= min_length
