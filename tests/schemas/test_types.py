@@ -161,6 +161,35 @@ def test_schema_dict():
         t.DictSchema().validate([])
 
 
+def test_schema_bool():
+    assert t.BoolSchema().validate(True) is True
+    assert t.BoolSchema().validate(False) is False
+
+    with pytest.raises(SchemaError):
+        t.BoolSchema().validate(0)
+
+    with pytest.raises(SchemaError):
+        t.BoolSchema().validate(1)
+
+    with pytest.raises(SchemaError):
+        t.BoolSchema().validate(3)
+
+    with pytest.raises(SchemaError):
+        t.BoolSchema().validate("3.2")
+
+    with pytest.raises(SchemaError):
+        t.BoolSchema().validate(3.3)
+
+    with pytest.raises(SchemaError):
+        t.BoolSchema().validate(None)
+
+    with pytest.raises(SchemaError):
+        t.BoolSchema().validate([])
+
+    with pytest.raises(SchemaError):
+        t.BoolSchema().validate({})
+
+
 def test_schema_none():
     assert t.NoneSchema().validate(None) is None
 

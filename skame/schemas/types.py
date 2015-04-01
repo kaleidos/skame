@@ -36,6 +36,11 @@ class DictSchema(Type):
         super().__init__(dict, message)
 
 
+class BoolSchema(Type):
+    def __init__(self, message=None):
+        super().__init__(bool, message)
+
+
 class NoneSchema(Is):
     def __init__(self, message=None):
         super().__init__(None, message)
