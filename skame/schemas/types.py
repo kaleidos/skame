@@ -41,6 +41,6 @@ class Bool(Type):
         super().__init__(bool, message)
 
 
-class None(Is):
+class IsNone(Is):
     def __init__(self, message=None):
         super().__init__(None, message)

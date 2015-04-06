@@ -5,211 +5,211 @@ from skame.schemas import types as t
 
 
 def test_schema_int():
-    assert t.IntSchema().validate(3) == 3
-    assert t.IntSchema().validate(1) == 1
-    assert t.IntSchema().validate(0) == 0
+    assert t.Int().validate(3) == 3
+    assert t.Int().validate(1) == 1
+    assert t.Int().validate(0) == 0
 
     with pytest.raises(SchemaError):
-        t.IntSchema().validate("3")
+        t.Int().validate("3")
 
     with pytest.raises(SchemaError):
-        t.IntSchema().validate(None)
+        t.Int().validate(None)
 
     with pytest.raises(SchemaError):
-        t.IntSchema().validate(False)
+        t.Int().validate(False)
 
     with pytest.raises(SchemaError):
-        t.IntSchema().validate(True)
+        t.Int().validate(True)
 
     with pytest.raises(SchemaError):
-        t.IntSchema().validate({})
+        t.Int().validate({})
 
     with pytest.raises(SchemaError):
-        t.IntSchema().validate([])
+        t.Int().validate([])
 
 
 def test_schema_float():
-    assert t.FloatSchema().validate(3.2) == 3.2
-    assert t.FloatSchema().validate(3.0) == 3.0
+    assert t.Float().validate(3.2) == 3.2
+    assert t.Float().validate(3.0) == 3.0
 
     with pytest.raises(SchemaError):
-        t.FloatSchema().validate(3)
+        t.Float().validate(3)
 
     with pytest.raises(SchemaError):
-        t.FloatSchema().validate("3.2")
+        t.Float().validate("3.2")
 
     with pytest.raises(SchemaError):
-        t.FloatSchema().validate(None)
+        t.Float().validate(None)
 
     with pytest.raises(SchemaError):
-        t.FloatSchema().validate(False)
+        t.Float().validate(False)
 
     with pytest.raises(SchemaError):
-        t.FloatSchema().validate(True)
+        t.Float().validate(True)
 
     with pytest.raises(SchemaError):
-        t.FloatSchema().validate({})
+        t.Float().validate({})
 
     with pytest.raises(SchemaError):
-        t.FloatSchema().validate([])
+        t.Float().validate([])
 
 
 def test_schema_complex():
-    assert t.ComplexSchema().validate(3 + 2j) == 3 + 2j
-    assert t.ComplexSchema().validate(2j) == 2j
+    assert t.Complex().validate(3 + 2j) == 3 + 2j
+    assert t.Complex().validate(2j) == 2j
 
     with pytest.raises(SchemaError):
-        t.ComplexSchema().validate(3)
+        t.Complex().validate(3)
 
     with pytest.raises(SchemaError):
-        t.ComplexSchema().validate(3.3)
+        t.Complex().validate(3.3)
 
     with pytest.raises(SchemaError):
-        t.ComplexSchema().validate("3.2")
+        t.Complex().validate("3.2")
 
     with pytest.raises(SchemaError):
-        t.ComplexSchema().validate(None)
+        t.Complex().validate(None)
 
     with pytest.raises(SchemaError):
-        t.ComplexSchema().validate(False)
+        t.Complex().validate(False)
 
     with pytest.raises(SchemaError):
-        t.ComplexSchema().validate(True)
+        t.Complex().validate(True)
 
     with pytest.raises(SchemaError):
-        t.ComplexSchema().validate({})
+        t.Complex().validate({})
 
     with pytest.raises(SchemaError):
-        t.ComplexSchema().validate([])
+        t.Complex().validate([])
 
 
 def test_schema_string():
-    assert t.StringSchema().validate("test") == "test"
-    assert t.StringSchema().validate("") == ""
+    assert t.String().validate("test") == "test"
+    assert t.String().validate("") == ""
 
     with pytest.raises(SchemaError):
-        t.StringSchema().validate(3)
+        t.String().validate(3)
 
     with pytest.raises(SchemaError):
-        t.StringSchema().validate(3.3)
+        t.String().validate(3.3)
 
     with pytest.raises(SchemaError):
-        t.StringSchema().validate(None)
+        t.String().validate(None)
 
     with pytest.raises(SchemaError):
-        t.StringSchema().validate(False)
+        t.String().validate(False)
 
     with pytest.raises(SchemaError):
-        t.StringSchema().validate(True)
+        t.String().validate(True)
 
     with pytest.raises(SchemaError):
-        t.StringSchema().validate({})
+        t.String().validate({})
 
     with pytest.raises(SchemaError):
-        t.StringSchema().validate([])
+        t.String().validate([])
 
 
 def test_schema_list():
-    assert t.ListSchema().validate(["test", "test2"]) == ["test", "test2"]
-    assert t.ListSchema().validate([]) == []
+    assert t.List().validate(["test", "test2"]) == ["test", "test2"]
+    assert t.List().validate([]) == []
 
     with pytest.raises(SchemaError):
-        t.ListSchema().validate(3)
+        t.List().validate(3)
 
     with pytest.raises(SchemaError):
-        t.ListSchema().validate("3.2")
+        t.List().validate("3.2")
 
     with pytest.raises(SchemaError):
-        t.ListSchema().validate(3.3)
+        t.List().validate(3.3)
 
     with pytest.raises(SchemaError):
-        t.ListSchema().validate(None)
+        t.List().validate(None)
 
     with pytest.raises(SchemaError):
-        t.ListSchema().validate(False)
+        t.List().validate(False)
 
     with pytest.raises(SchemaError):
-        t.ListSchema().validate(True)
+        t.List().validate(True)
 
     with pytest.raises(SchemaError):
-        t.ListSchema().validate({})
+        t.List().validate({})
 
 
 def test_schema_dict():
-    assert t.DictSchema().validate({"test": "test", "test2": "test2"}) == {"test": "test", "test2": "test2"}
-    assert t.DictSchema().validate({}) == {}
+    assert t.Dict().validate({"test": "test", "test2": "test2"}) == {"test": "test", "test2": "test2"}
+    assert t.Dict().validate({}) == {}
 
     with pytest.raises(SchemaError):
-        t.DictSchema().validate(3)
+        t.Dict().validate(3)
 
     with pytest.raises(SchemaError):
-        t.DictSchema().validate("3.2")
+        t.Dict().validate("3.2")
 
     with pytest.raises(SchemaError):
-        t.DictSchema().validate(3.3)
+        t.Dict().validate(3.3)
 
     with pytest.raises(SchemaError):
-        t.DictSchema().validate(None)
+        t.Dict().validate(None)
 
     with pytest.raises(SchemaError):
-        t.DictSchema().validate(False)
+        t.Dict().validate(False)
 
     with pytest.raises(SchemaError):
-        t.DictSchema().validate(True)
+        t.Dict().validate(True)
 
     with pytest.raises(SchemaError):
-        t.DictSchema().validate([])
+        t.Dict().validate([])
 
 
 def test_schema_bool():
-    assert t.BoolSchema().validate(True) is True
-    assert t.BoolSchema().validate(False) is False
+    assert t.Bool().validate(True) is True
+    assert t.Bool().validate(False) is False
 
     with pytest.raises(SchemaError):
-        t.BoolSchema().validate(0)
+        t.Bool().validate(0)
 
     with pytest.raises(SchemaError):
-        t.BoolSchema().validate(1)
+        t.Bool().validate(1)
 
     with pytest.raises(SchemaError):
-        t.BoolSchema().validate(3)
+        t.Bool().validate(3)
 
     with pytest.raises(SchemaError):
-        t.BoolSchema().validate("3.2")
+        t.Bool().validate("3.2")
 
     with pytest.raises(SchemaError):
-        t.BoolSchema().validate(3.3)
+        t.Bool().validate(3.3)
 
     with pytest.raises(SchemaError):
-        t.BoolSchema().validate(None)
+        t.Bool().validate(None)
 
     with pytest.raises(SchemaError):
-        t.BoolSchema().validate([])
+        t.Bool().validate([])
 
     with pytest.raises(SchemaError):
-        t.BoolSchema().validate({})
+        t.Bool().validate({})
 
 
 def test_schema_none():
-    assert t.NoneSchema().validate(None) is None
+    assert t.IsNone().validate(None) is None
 
     with pytest.raises(SchemaError):
-        t.NoneSchema().validate(3)
+        t.IsNone().validate(3)
 
     with pytest.raises(SchemaError):
-        t.NoneSchema().validate("3.2")
+        t.IsNone().validate("3.2")
 
     with pytest.raises(SchemaError):
-        t.NoneSchema().validate(3.3)
+        t.IsNone().validate(3.3)
 
     with pytest.raises(SchemaError):
-        t.NoneSchema().validate(False)
+        t.IsNone().validate(False)
 
     with pytest.raises(SchemaError):
-        t.NoneSchema().validate(True)
+        t.IsNone().validate(True)
 
     with pytest.raises(SchemaError):
-        t.NoneSchema().validate([])
+        t.IsNone().validate([])
 
     with pytest.raises(SchemaError):
-        t.NoneSchema().validate({})
+        t.IsNone().validate({})
