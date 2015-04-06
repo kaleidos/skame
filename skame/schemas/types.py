@@ -1,7 +1,7 @@
 from skame.schemas.base import Type, Is
 
 
-class IntSchema(Type):
+class Int(Type):
     def __init__(self, message=None):
         super().__init__(int, message)
 
@@ -11,36 +11,36 @@ class IntSchema(Type):
         return super()._check(data)
 
 
-class FloatSchema(Type):
+class Float(Type):
     def __init__(self, message=None):
         super().__init__(float, message)
 
 
-class ComplexSchema(Type):
+class Complex(Type):
     def __init__(self, message=None):
         super().__init__(complex, message)
 
 
-class StringSchema(Type):
+class String(Type):
     def __init__(self, message=None):
         super().__init__(str, message)
 
 
-class ListSchema(Type):
+class List(Type):
     def __init__(self, message=None):
         super().__init__(list, message)
 
 
-class DictSchema(Type):
+class Dict(Type):
     def __init__(self, message=None):
         super().__init__(dict, message)
 
 
-class BoolSchema(Type):
+class Bool(Type):
     def __init__(self, message=None):
         super().__init__(bool, message)
 
 
-class NoneSchema(Is):
+class None(Is):
     def __init__(self, message=None):
         super().__init__(None, message)

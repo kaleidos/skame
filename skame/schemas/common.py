@@ -2,7 +2,7 @@ from skame.schemas.base import Schema, SchemaError
 from gettext import gettext as _
 
 
-class ChoicesSchema(Schema):
+class Choices(Schema):
     message = _("Value not in the valid choices ({choices})")
 
     def __init__(self, choices, message=None):

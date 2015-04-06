@@ -6,7 +6,7 @@ from skame.schemas.base import Schema, Predicate
 from skame.exceptions import SchemaError
 
 
-class NotEmptySchema(Schema):
+class NotEmpty(Schema):
     """Validator for checking if a value is not empty (boolean false)."""
     message = _("Empty value")
 
@@ -23,7 +23,7 @@ class NotEmptySchema(Schema):
         return data
 
 
-class RegexSchema(Schema):
+class Regex(Schema):
     regex = ''
     message = _('Invalid text.')
 
@@ -50,7 +50,7 @@ class RegexSchema(Schema):
         return data
 
 
-class URLSchema(RegexSchema):
+class URL(RegexSchema):
     regex = re.compile(
         r'^(?:[a-z0-9\.\-]*)://'  # scheme is validated separately
         r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}(?<!-)\.?)|'  # domain...
@@ -85,7 +85,7 @@ class URLSchema(RegexSchema):
         return True
 
 
-class EmailSchema(Schema):
+class Email(Schema):
     """Validator for checking if a value is an email."""
     message = _("Invalid email format")
     user_regex = re.compile(
@@ -136,7 +136,7 @@ class EmailSchema(Schema):
         return data
 
 
-class MaxLengthSchema(Predicate):
+class MaxLength(Predicate):
     message = _('Too long string')
 
     def __init__(self, max_length, message=None):
@@ -146,7 +146,7 @@ class MaxLengthSchema(Predicate):
         self.predicate = lambda data: len(data) <= max_length
 
 
-class MinLengthSchema(Predicate):
+class MinLength(Predicate):
     message = _('Too short string')
 
     def __init__(self, min_length, message=None):
