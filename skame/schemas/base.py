@@ -116,7 +116,7 @@ class Is(Type):
 class PredicateBase(Schema):
     """Base class for define predicates."""
 
-    message = _("`{predicate}({data})` should evaluate to True.")
+    message = _("`{predicate}({data})` should evaluate to True")
 
     def __init__(self, message: str=None):
         if message:
@@ -174,6 +174,29 @@ class And(Schema):
     def validate(self, data: object) -> object:
         validator = compose(*[condition.validate for condition in self.conditions])
         return validator(data)
+
+
+class Or(Schema):
+    """Validator to combine another validators and succeeds if any of them succeed."""
+    message = _("All conditions failed: {messages}")
+
+    def __init__(self, condition1: "Schema", *extra_conditions, message=None):
+        self.conditions = list(reversed((condition1,) + extra_conditions))
+
+        if message:
+            self.message = message
+
+    def validate(self, data: object) -> object:
+        messages = []
+
+        for condition in self.conditions:
+            try:
+                return condition.validate(data)
+            except SchemaError as err:
+                messages.append(err.error)
+
+        message = self.message.format(messages=", ".join(messages))
+        raise SchemaError(message)
 
 
 class Map(Schema):

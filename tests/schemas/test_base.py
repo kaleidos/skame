@@ -35,6 +35,13 @@ def test_schema_logic_and():
         b.And(b.Pipe(str), b.Predicate(lambda n: n == 42)).validate("20")
 
 
+def test_schema_logic_or():
+    assert b.Or(b.Type(str), b.Predicate(lambda n: n == 42)).validate("20") == "20"
+    assert b.Or(b.Type(str), b.Predicate(lambda n: n == 42)).validate(42) == 42
+    with pytest.raises(SchemaError):
+        b.Or(b.Type(str), b.Predicate(lambda n: n == 42)).validate(20)
+
+
 def test_schema_as_map():
     schema = b.Map({"name": b.Predicate(lambda name: 0 < len(name) < 25)})
 
