@@ -1,5 +1,6 @@
 from skame.schemas.base import Type, Is
 
+import datetime
 
 class Int(Type):
     def __init__(self, message=None):
@@ -39,6 +40,16 @@ class Dict(Type):
 class Bool(Type):
     def __init__(self, message=None):
         super().__init__(bool, message)
+
+
+class Date(Type):
+    def __init__(self, message=None):
+        super().__init__(datetime.date, message)
+
+
+class DateTime(Type):
+    def __init__(self, message=None):
+        super().__init__(datetime.datetime, message)
 
 
 class IsNone(Is):

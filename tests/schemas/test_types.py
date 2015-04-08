@@ -190,6 +190,65 @@ def test_schema_bool():
         t.Bool().validate({})
 
 
+def test_schema_date():
+    from datetime import date, datetime
+
+    assert t.Date().validate(date(2015, 4, 8)) == date(2015, 4, 8)
+
+    # NOTE: a python datetime is also a date (is type compatible)
+    assert t.Date().validate(datetime(2015, 4, 8, 12, 50, 0)) == datetime(2015, 4, 8, 12, 50, 0)
+
+    with pytest.raises(SchemaError):
+        t.Date().validate(0)
+
+    with pytest.raises(SchemaError):
+        t.Date().validate("")
+
+    with pytest.raises(SchemaError):
+        t.Date().validate("3.2")
+
+    with pytest.raises(SchemaError):
+        t.Date().validate(3.3)
+
+    with pytest.raises(SchemaError):
+        t.Date().validate(None)
+
+    with pytest.raises(SchemaError):
+        t.Date().validate([])
+
+    with pytest.raises(SchemaError):
+        t.Date().validate({})
+
+
+def test_schema_datetime():
+    from datetime import date, datetime
+    assert t.DateTime().validate(datetime(2015, 4, 8, 12, 50, 0)) == datetime(2015, 4, 8, 12, 50, 0)
+
+    with pytest.raises(SchemaError):
+        t.DateTime().validate(date(2015, 4, 8))
+
+    with pytest.raises(SchemaError):
+        t.DateTime().validate(0)
+
+    with pytest.raises(SchemaError):
+        t.DateTime().validate("")
+
+    with pytest.raises(SchemaError):
+        t.DateTime().validate("3.2")
+
+    with pytest.raises(SchemaError):
+        t.DateTime().validate(3.3)
+
+    with pytest.raises(SchemaError):
+        t.DateTime().validate(None)
+
+    with pytest.raises(SchemaError):
+        t.DateTime().validate([])
+
+    with pytest.raises(SchemaError):
+        t.DateTime().validate({})
+
+
 def test_schema_none():
     assert t.IsNone().validate(None) is None
 
