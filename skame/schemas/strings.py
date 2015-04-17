@@ -136,6 +136,23 @@ class Email(Schema):
         return data
 
 
+class ISODate(Schema):
+    """Validator for checking if a value a date in ISO format (YYYY-MM-DD)."""
+    message = _("Invalid ISO date")
+
+    def __init__(self, message=None):
+        if message:
+            self.message = message
+
+    def validate(self, data: object) -> object:
+        from datetime import datetime
+        try:
+            cleaned_data = datetime.strptime(data, '%Y-%m-%d').date()
+            return cleaned_data
+        except (ValueError, TypeError):
+            raise SchemaError(self.message)
+
+
 class MaxLength(Predicate):
     message = _('Too long string')
 
@@ -154,3 +171,4 @@ class MinLength(Predicate):
             self.message = message
 
         self.predicate = lambda data: len(data) >= min_length
+
