@@ -85,61 +85,63 @@ class Schema(metaclass=ABCMeta):
         pass
 
 
-class Type(Schema):
-    """Validator for checking the type of a value."""
-    message = _("Not of type `{type}`")
-
-    def __init__(self, type, message=None):
-        self.type = type
-
-        if message:
-            self.message = message
-
-    def _check(self, data):
-        return isinstance(data, self.type)
-
-    def validate(self, data: object) -> object:
-        if not self._check(data):
-            message = self.message.format(type=self.type)
-            raise SchemaError(message)
-        return data
-
-
-class Is(Type):
-    """Validator for checking the identity of a value."""
-    message = _("Is not `{type}`")
-
-    def _check(self, data):
-        return data is self.type
-
-
-class PredicateBase(Schema):
-    """Base class for define predicates."""
-
-    message = _("`{predicate}({data})` should evaluate to True")
-
-    def __init__(self, message: str=None):
-        if message:
-            self.message = message
-
-    def validate(self, data: object) -> object:
-        if not self.predicate(data):
-            message = self.message.format(predicate=self.predicate, data=data)
-            raise SchemaError(message)
-        return data
-
-
-class Predicate(PredicateBase):
+class Predicate(Schema):
     """
     Validator for checking if a predicate accepts a value.
 
     This is concrete case of predicate that accept a callable
     as a parameter.
     """
+    message = _("`{predicate}({data})` should evaluate to True")
 
-    def __init__(self, predicate: "callable"=None, message: str=None):
-        super().__init__(message)
+    def __init__(self, predicate: "callable", message: str=None):
         self.predicate = predicate
+        if message:
+            self.message = message
+
+    def validate(self, data: object) -> object:
+        if not self.predicate(data):
+            raise SchemaError(self.get_message(data))
+        return data
+
+    def get_message(self, data):
+        return self.message.format(predicate=self.predicate, data=data)
+
+
+class Type(Predicate):
+    """Validator for checking the type of a value."""
+    message = _("Not of type `{type}`")
+
+    def __init__(self, type, message=None):
+        super().__init__(lambda data: isinstance(data, type), message)
+        self.type = type
+
+    def get_message(self, data):
+        return self.message.format(type=self.type)
+
+
+class StrictType(Predicate):
+    """Validator for strictly checking the type of a value."""
+    message = _("Not of strict type `{type}`")
+
+    def __init__(self, atype, message=None):
+        super().__init__(lambda data: type(data) is atype, message)
+        self.type = atype
+
+    def get_message(self, data):
+        return self.message.format(type=self.type)
+
+
+class Is(Predicate):
+    """Validator for checking the identity of a value."""
+    message = _("Is not `{obj}`")
+
+    def __init__(self, obj: object, message=None):
+        super().__init__(lambda data: data is obj, message)
+        self.obj = obj
+
+    def get_message(self, data):
+        return self.message.format(obj=self.obj)
 
 
 class Pipe(Schema):

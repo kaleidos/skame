@@ -21,10 +21,21 @@ def test_schema_as_type():
         b.Type(int).validate("123")
 
 
+def test_schema_as_is():
+    assert b.Is("hai").validate("hai") == "hai"
+    assert b.Is(123).validate(123) == 123
+
+    singleton = object()
+
+    assert b.Is(singleton).validate(singleton) == singleton
+    with pytest.raises(SchemaError):
+        b.Is(singleton).validate(object())
+
+
 def test_schema_as_pipe():
     assert b.Pipe(int).validate("123") == 123
     assert b.Pipe(int, str).validate(123.0) == "123"
-    assert b.Pipe(int, str, lambda s: (42,)).validate(123.0) == (42,)
+    assert b.Pipe(int, str, lambda _: (42,)).validate(123.0) == (42,)
     with pytest.raises(SchemaError):
         b.Pipe(int).validate(None)
 
@@ -44,8 +55,11 @@ def test_schema_logic_or():
 
 def test_schema_as_map():
     schema = b.Map({"name": b.Predicate(lambda name: 0 < len(name) < 25)})
-
     assert schema.validate({"name": "First name", "age": "28"}) == {"name": "First name"}
+
+    schema = b.Map({"name": b.And(b.Predicate(lambda name: 0 < len(name) < 25), b.Pipe(len))})
+    assert schema.validate({"name": "First name", "age": "28"}) == {"name": 10}
+
     with pytest.raises(SchemaErrors):
         schema.validate({"name": ""})
 
