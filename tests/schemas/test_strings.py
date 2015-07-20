@@ -2,7 +2,7 @@ import pytest
 
 from skame.exceptions import SchemaError
 from skame.schemas.strings import (Email, NotEmpty,
-                                   MaxLength, MinLength, URL,
+                                   Length, MaxLength, MinLength, URL,
                                    Regex)
 
 
@@ -113,24 +113,40 @@ def test_not_empty_schema_change_error_message():
     assert excinfo.value.error == "Test Message Change"
 
 
+def test_length_schema_valid():
+    text = "test"
+    assert Length(len(text)).validate(text) == text
+
+
+def test_length_schema_invalid():
+    text = "test"
+    with pytest.raises(SchemaError):
+        Length(len(text) - 1).validate(text)
+
+
 def test_max_length_schema_valid():
     assert MaxLength(10).validate("test") == "test"
+
 
 def test_max_length_schema_invalid():
     with pytest.raises(SchemaError):
         MaxLength(1).validate("test")
+
 
 def test_max_length_schema_change_error_message():
     with pytest.raises(SchemaError) as excinfo:
         MaxLength(1, message="Test Message Change").validate("test")
     assert excinfo.value.error == "Test Message Change"
 
+
 def test_min_length_schema_valid():
     assert MinLength(1).validate("test") == "test"
+
 
 def test_min_length_schema_invalid():
     with pytest.raises(SchemaError):
         MinLength(10).validate("test")
+
 
 def test_min_length_schema_change_error_message():
     with pytest.raises(SchemaError) as excinfo:
