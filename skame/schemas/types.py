@@ -1,15 +1,10 @@
-from skame.schemas.base import Type, Is
+from skame.schemas.base import Type, StrictType, Is
 
 import datetime
 
-class Int(Type):
+class Int(StrictType):
     def __init__(self, message=None):
         super().__init__(int, message)
-
-    def _check(self, data):
-        if data is True or data is False:
-            return False
-        return super()._check(data)
 
 
 class Float(Type):

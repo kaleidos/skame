@@ -1,4 +1,5 @@
 import re
+import operator
 
 from gettext import gettext as _
 
@@ -153,22 +154,22 @@ class ISODate(Schema):
             raise SchemaError(self.message)
 
 
-class MaxLength(Predicate):
-    message = _('Too long string')
+class Length(Predicate):
+    message = _('Wrong length. Must be {length}.')
+    op = operator.eq
 
-    def __init__(self, max_length, message=None):
-        if message is not None:
-            self.message = message
+    def __init__(self, length, message=None):
+        super().__init__(lambda data: self.op(len(data), length), message)
+        self.length = length
 
-        self.predicate = lambda data: len(data) <= max_length
+    def get_message(self, data):
+        return self.message.format(length=self.length)
+
+class MaxLength(Length):
+    message = _('Too long string. Max {length}.')
+    op = operator.lt
 
 
-class MinLength(Predicate):
-    message = _('Too short string')
-
-    def __init__(self, min_length, message=None):
-        if message is not None:
-            self.message = message
-
-        self.predicate = lambda data: len(data) >= min_length
-
+class MinLength(Length):
+    message = _('Too short string. Min {length}.')
+    op = operator.gt
