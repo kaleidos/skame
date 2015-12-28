@@ -196,3 +196,36 @@ assert schema.validate({"name": "First name", "age": "28"}) == {"name": 10}
 with pytest.raises(SchemaErrors):
     schema.validate({"name": ""})
 ```
+
+##### Marking fields as optional #####
+
+In the map validator you can mark fields as optional, that is, they are validated only if present and not required, for example:
+
+```python
+assert Map({"name": Pipe(str), "age": Pipe(int)}).required == {"name", "age"}
+assert Map({"name": Pipe(str), Optional("age"): Pipe(int)}).required == {"name"}
+
+validator = Map({"name": Type(str), Optional("age"): Type(int)})
+assert validator.validate({"name": "John"}) == {"name": "John"}
+with pytest.raises(SchemaErrors):
+    validator.validate({"name": "John", "age": 1.2})  # age must be an int
+```
+
+##### Marking fields as dependent #####
+
+In the map validator you can mark fields as dependent on others fields already validated, for example:
+
+```python
+def uk_postalcode_or_none(data):
+    if data.get("country") == "GBR":
+        validator = is_uk_postalcode
+    else:
+        validator = is_none
+    return validator.validate(data.get("postalcode", ""))
+
+
+LivelocationValidator = Map({
+    "country": And(Type(str), Predicate(lambda x: len(x) == 3)),
+    Dependent("postalcode"): Pipe(uk_postalcode_or_none)
+})
+```
