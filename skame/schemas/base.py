@@ -58,18 +58,18 @@ def is_field_dependent(field: object) -> bool:
 
 
 @functools.singledispatch
-def schema(definition: "callable") -> "Pipe":
-    return Pipe(definition)
+def schema(definition: "callable", message: str=None) -> "Pipe":
+    return Pipe(definition, message=message)
 
 
 @schema.register(types.LambdaType)
-def schema_callable(definition: "callable") -> "Predicate":
+def schema_callable(definition: "callable", message: str=None) -> "Predicate":
     return Predicate(definition)
 
 
 @schema.register(collections.abc.Mapping)
-def schema_map(definition: dict) -> "Map":
-    return Map(definition)
+def schema_map(definition: dict, messages: dict=None) -> "Map":
+    return Map(definition, messages=messages)
 
 
 class Schema(metaclass=ABCMeta):
@@ -203,11 +203,17 @@ class Or(Schema):
 
 class Map(Schema):
     """Validator that validates a map of field names to validators."""
+    messages = {
+        'required': _("Field `{0}` is required.")
+    }
 
-    def __init__(self, mapping: dict):
+    def __init__(self, mapping: dict, messages=None):
         required = set()
         optional = set()
         dependent = set()
+
+        if messages:
+            self.messages = messages
 
         for field in mapping:
             if is_field_optional(field):
@@ -232,7 +238,7 @@ class Map(Schema):
                 value = value_getter(data, field)
                 cleaned_value = self.mapping[field].validate(value)
             except KeyError:
-                errors[str(field)] = _("Field `{0}` is required.").format(field)
+                errors[str(field)] = self.messages.get('required', type(self).messages['required']).format(field)
             except SchemaError as e:
                 errors[str(field)] = e.error
             else:
