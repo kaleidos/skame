@@ -203,17 +203,18 @@ class Or(Schema):
 
 class Map(Schema):
     """Validator that validates a map of field names to validators."""
-    messages = {
-        'required': _("Field `{0}` is required.")
-    }
 
     def __init__(self, mapping: dict, messages=None):
         required = set()
         optional = set()
         dependent = set()
 
+        self.messages = {
+            'required': _("Field `{0}` is required.")
+        }
+
         if messages:
-            self.messages = messages
+            self.messages.update(messages)
 
         for field in mapping:
             if is_field_optional(field):
@@ -238,7 +239,7 @@ class Map(Schema):
                 value = value_getter(data, field)
                 cleaned_value = self.mapping[field].validate(value)
             except KeyError:
-                errors[str(field)] = self.messages.get('required', type(self).messages['required']).format(field)
+                errors[str(field)] = self.messages['required'].format(field)
             except SchemaError as e:
                 errors[str(field)] = e.error
             else:
