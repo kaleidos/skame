@@ -64,7 +64,7 @@ def schema(definition: "callable", message: str=None) -> "Pipe":
 
 @schema.register(types.LambdaType)
 def schema_callable(definition: "callable", message: str=None) -> "Predicate":
-    return Predicate(definition)
+    return Predicate(definition, message=message)
 
 
 @schema.register(collections.abc.Mapping)
