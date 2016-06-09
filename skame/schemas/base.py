@@ -242,6 +242,8 @@ class Map(Schema):
                 errors[str(field)] = self.messages['required'].format(field)
             except SchemaError as e:
                 errors[str(field)] = e.error
+            except SchemaErrors as e:
+                errors[str(field)] = e.errors
             else:
                 result[str(field)] = cleaned_value
 
