@@ -148,3 +148,33 @@ class TestValidate:
         assert validate(self.schema, data) == (None, {"age": "User has to be an adult"})
         data = {"name": "skame", "age": ""}
         assert validate(self.schema, data) == (None, {"age": "User age must be an integer"})
+
+
+def test_nested_map_errors():
+    data = {
+        "name": 1000,
+        "amount": {
+            "amount": 1000,
+            "currency": 1000
+        }
+    }
+
+    validator = b.schema({
+        "c": b.Type(str),
+        "amount": b.Map({
+            "amount": b.Type(str),
+            "currency": b.Type(str)
+        })
+    })
+
+    with pytest.raises(SchemaErrors) as exc:
+        validator.validate(data)
+
+    expected = {
+        'c': 'Field `c` is required.',
+        'amount': {
+            'amount': "Not of type `<class 'str'>`",
+            'currency': "Not of type `<class 'str'>`"
+        }
+    }
+    assert expected == exc.value.errors
